@@ -18,6 +18,15 @@ namespace ExpressionTrees
             Expression<Func<Foo, string>> expr = c => c.ReturnSomething(empId, "Hello Expression");
             Expression<Func<Foo, bool>> expr1 = c => c.FooProp;
 
+            var idConstant = Expression.Constant(7);
+            var stringConstant = Expression.Constant("Hello Expressions");
+            var paramExpression = Expression.Parameter(typeof(Foo), "c");
+            var methodInfo = typeof(Foo).GetMethod(nameof(Foo.ReturnSomething));
+            var methodCallExpression = Expression.Call(paramExpression, methodInfo, idConstant, stringConstant);
+            var lambdaExpression = Expression.Lambda<Func<Foo, String>>(methodCallExpression, paramExpression);
+            var lambddaFunc = lambdaExpression.Compile();
+            Console.WriteLine($"Invoked Lambda Func:- {lambddaFunc(fooVar)}");
+
             var exprFunc = expr.Compile();
             var expr1Func = expr1.Compile();
             var result1 = exprFunc(fooVar);
